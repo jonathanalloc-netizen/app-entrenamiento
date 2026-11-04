@@ -1,5 +1,5 @@
 import { useEffect, useId, useState } from 'react';
-import { CalendarDays, House, Settings, TrendingUp, X } from 'lucide-react';
+import { CalendarDays, House, Salad, Settings, TrendingUp, X } from 'lucide-react';
 import { GROUPS } from '../routine';
 import { navigate } from '../router';
 import { addTime, alarm, stopTimer, useTimer } from '../timer';
@@ -115,6 +115,7 @@ export function LineChart({ points, color = 'var(--primary)', format = (v) => v 
 
 const TABS = [
   { name: 'hoy', path: '/', label: 'Hoy', Icon: House },
+  { name: 'dieta', path: '/dieta', label: 'Dieta', Icon: Salad },
   { name: 'progreso', path: '/progreso', label: 'Progreso', Icon: TrendingUp },
   { name: 'historial', path: '/historial', label: 'Historial', Icon: CalendarDays },
   { name: 'ajustes', path: '/ajustes', label: 'Ajustes', Icon: Settings },

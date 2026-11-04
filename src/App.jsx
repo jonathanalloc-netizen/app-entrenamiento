@@ -2,9 +2,12 @@ import { useRoute } from './router';
 import { RestTimer, TabBar } from './components/ui';
 import Home from './screens/Home';
 import Session from './screens/Session';
+import Nutrition from './screens/Nutrition';
 import Progress from './screens/Progress';
 import History from './screens/History';
 import Settings from './screens/Settings';
+
+const SCREENS = { dieta: Nutrition, progreso: Progress, historial: History, ajustes: Settings };
 
 export default function App() {
   const { name, param } = useRoute();
@@ -17,11 +20,12 @@ export default function App() {
       </div>
     );
 
+  const Screen = SCREENS[name] ?? Home;
   return (
     <div className="app">
-      {name === 'progreso' ? <Progress exId={param} /> : name === 'historial' ? <History /> : name === 'ajustes' ? <Settings /> : <Home />}
+      <Screen exId={param} />
       <RestTimer />
-      <TabBar active={name === 'progreso' || name === 'historial' || name === 'ajustes' ? name : 'hoy'} />
+      <TabBar active={SCREENS[name] ? name : 'hoy'} />
     </div>
   );
 }

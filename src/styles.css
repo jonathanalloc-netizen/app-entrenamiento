@@ -9,6 +9,9 @@
   --primary: #1fb57f;
   --primary-ink: #0f7d57;
   --primary-soft: #dcf5ea;
+  --orange: #f5913e;
+  --orange-soft: #fdebd9;
+  --orange-ink: #b45f17;
   --up: #1fa874;
   --down: #e5534b;
   --shadow: 0 1px 2px rgb(20 40 30 / 0.04), 0 8px 24px rgb(20 40 30 / 0.06);
@@ -28,6 +31,8 @@
     --primary: #2fcb8f;
     --primary-ink: #6fe0b4;
     --primary-soft: #183a2c;
+    --orange-soft: #3b2a1a;
+    --orange-ink: #f8b77b;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.3);
     color-scheme: dark;
   }
@@ -137,7 +142,7 @@ h1, h2, h3, p { margin: 0; }
   position: fixed; left: 50%; transform: translateX(-50%);
   bottom: calc(env(safe-area-inset-bottom) + 12px);
   width: min(calc(100% - 32px), 528px);
-  display: grid; grid-template-columns: repeat(4, 1fr);
+  display: grid; grid-template-columns: repeat(5, 1fr);
   background: var(--card); border-radius: 26px; padding: 8px;
   box-shadow: 0 10px 30px rgb(20 40 30 / 0.14);
   z-index: 10;
@@ -246,6 +251,54 @@ input.date-inline { width: auto; padding: 7px 10px; font-size: 14px; font-weight
 .empty-icon { width: 64px; height: 64px; border-radius: 22px; background: var(--primary-soft); color: var(--primary-ink); display: grid; place-items: center; margin-bottom: 6px; }
 .empty h3 { font-size: 18px; font-weight: 800; }
 .empty p { color: var(--muted); max-width: 300px; display: flex; flex-direction: column; gap: 14px; align-items: center; }
+
+/* ---- Dieta ---- */
+.daynav { display: flex; align-items: center; gap: 10px; }
+.daynav-label { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.daynav-label strong { font-size: 17px; font-weight: 800; }
+.daynav-label strong::first-letter { text-transform: uppercase; }
+
+.typepick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.typepick button {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px;
+  border-radius: 20px; background: var(--card); box-shadow: var(--shadow); color: var(--muted);
+  font-weight: 700; font-size: 13.5px; text-align: center; border: 2px solid transparent;
+}
+.typepick button.on { color: var(--orange-ink); background: var(--orange-soft); border-color: var(--orange); box-shadow: none; }
+
+.nutri .hero-info { gap: 6px; }
+.pill.orange { background: var(--orange-soft); color: var(--orange-ink); }
+.supp {
+  display: flex; align-items: center; gap: 8px; margin-top: 6px; padding: 8px 10px; border-radius: 14px;
+  background: var(--soft); font-size: 13px; width: 100%;
+}
+.supp span { flex: 1; }
+.supp i { width: 22px; height: 22px; border-radius: 8px; display: grid; place-items: center; background: var(--track); color: transparent; }
+.supp.on i { background: var(--primary); color: #fff; }
+
+.meal { gap: 10px; }
+.meal-head { display: flex; align-items: center; gap: 10px; }
+.meal-head h3 { flex: 1; font-size: 16px; font-weight: 750; }
+.meal-n {
+  width: 32px; height: 32px; border-radius: 11px; display: grid; place-items: center;
+  background: var(--orange-soft); color: var(--orange-ink); font-weight: 800; font-size: 14px;
+}
+.meal.done .check { background: var(--primary); color: #fff; }
+.meal.done .meal-n { background: var(--primary-soft); color: var(--primary-ink); }
+.meal.done .foods { opacity: 0.55; }
+.foods { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.foods li { display: flex; gap: 10px; align-items: baseline; padding: 8px 0; }
+.foods li + li { border-top: 1px dashed var(--line); }
+.foods strong { flex: none; min-width: 64px; font-weight: 800; font-size: 14px; }
+.foods span { font-size: 14.5px; }
+.foods span::first-letter { text-transform: uppercase; }
+
+.tips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding-top: 4px; }
+.tip { font-size: 12.5px; font-weight: 650; padding: 6px 12px; border-radius: 99px; background: var(--soft); color: var(--muted); }
+
+.nutri-cta { flex-direction: row; align-items: center; gap: 14px; text-align: left; }
+.nutri-cta .day-badge { --c: var(--orange); }
+.nutri-cta > div:nth-child(2) { flex: 1; display: flex; flex-direction: column; }
 
 /* ---- Temporizador ---- */
 .timer {

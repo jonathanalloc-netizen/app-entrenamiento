@@ -9,6 +9,8 @@ const initial = () => ({
   version: 1,
   sessions: [],
   settings: { cycleStart: mondayOf(todayISO()) },
+  // Por fecha: { type: 'pesas' | 'descanso', eaten: { c1: true }, option: { c1: 1 }, supplements: { creatina: true } }
+  nutrition: {},
 });
 
 function load() {
@@ -113,6 +115,41 @@ export function setSettings(patch) {
     Object.assign(d.settings, patch);
   });
 }
+
+// Pesas o descanso: lo que se eligió ese día; si no, pesas si ese día hay entreno.
+export function dayType(s, date) {
+  const chosen = s.nutrition?.[date]?.type;
+  if (chosen) return chosen;
+  return s.sessions.some((x) => x.date === date) ? 'pesas' : null;
+}
+
+function updateDay(date, fn) {
+  update((d) => {
+    d.nutrition ??= {};
+    d.nutrition[date] ??= {};
+    fn(d.nutrition[date]);
+  });
+}
+
+export const setDayType = (date, type) => updateDay(date, (n) => (n.type = type));
+
+export const toggleMeal = (date, mealId) =>
+  updateDay(date, (n) => {
+    n.eaten ??= {};
+    n.eaten[mealId] = !n.eaten[mealId];
+  });
+
+export const setMealOption = (date, mealId, idx) =>
+  updateDay(date, (n) => {
+    n.option ??= {};
+    n.option[mealId] = idx;
+  });
+
+export const toggleSupplement = (date, id) =>
+  updateDay(date, (n) => {
+    n.supplements ??= {};
+    n.supplements[id] = !n.supplements[id];
+  });
 
 export function exportData() {
   return JSON.stringify({ app: 'entreno', exportedAt: new Date().toISOString(), ...state }, null, 2);

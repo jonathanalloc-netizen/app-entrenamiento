@@ -4,6 +4,7 @@ App móvil (PWA) para seguir la rutina de entrenamiento, apuntar los pesos de ca
 
 - **Hoy**: semana del ciclo, entrenos de la semana, volumen y acceso al día que toca.
 - **Entreno**: series con peso y reps, los valores de la última vez como referencia y temporizador de descanso.
+- **Dieta**: plan de comidas según sea día de pesas o de descanso, con comidas y creatina para marcar.
 - **Progreso**: gráfica semanal por ejercicio (peso máximo, 1RM estimado, volumen, reps).
 - **Historial** y **Ajustes** (inicio del ciclo, exportar/importar copia).
 

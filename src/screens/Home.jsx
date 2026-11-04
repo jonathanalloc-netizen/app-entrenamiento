@@ -1,8 +1,9 @@
-import { ChevronRight, Dumbbell, Footprints, Play } from 'lucide-react';
+import { ChevronRight, Dumbbell, Footprints, Play, Salad } from 'lucide-react';
+import { NUTRITION } from '../nutrition';
 import { GROUPS, REST_DAY_NOTE } from '../routine';
 import { navigate } from '../router';
 import { sessionHasData, sortedSessions, weekTotals } from '../stats';
-import { getRoutine, startSession, useAppState } from '../store';
+import { dayType, getRoutine, startSession, useAppState } from '../store';
 import { addDays, cycleWeek, fmtLong, fmtShort, fmtVolume, mondayOf, todayISO } from '../utils';
 import { GroupChip, Ring } from '../components/ui';
 
@@ -26,7 +27,10 @@ export default function Home() {
   const next = routine.days[(lastIdx + 1) % routine.days.length];
   const trainedToday = sessions.some((s) => s.date === today && sessionHasData(s));
 
-  const lastDateOf = (dayId) => sessions.find((s) => s.dayId === dayId && (s.finishedAt || sessionHasData(s)))?.date;
+  const nutriPlan = NUTRITION.plans[dayType(state, today) ?? 'pesas'];
+  const mealsEaten = nutriPlan.meals.filter((m) => state.nutrition?.[today]?.eaten?.[m.id]).length;
+
+  const lastDateOf =(dayId) => sessions.find((s) => s.dayId === dayId && (s.finishedAt || sessionHasData(s)))?.date;
   const begin = (dayId) => navigate(`/sesion/${startSession(dayId, week)}`);
 
   return (
@@ -85,6 +89,17 @@ export default function Home() {
           <ChevronRight />
         </button>
       )}
+
+      <button className="card nutri-cta" onClick={() => navigate('/dieta')}>
+        <div className="day-badge">
+          <Salad size={20} />
+        </div>
+        <div>
+          <span className="muted small">Dieta de hoy · {nutriPlan.label.toLowerCase()}</span>
+          <strong>{mealsEaten} de {nutriPlan.meals.length} comidas</strong>
+        </div>
+        <ChevronRight size={18} className="muted" />
+      </button>
 
       <h2 className="section-title">Tu rutina</h2>
       <div className="days">
