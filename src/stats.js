@@ -58,7 +58,7 @@ export function sessionVolume(session) {
 }
 
 export function weekTotals(sessions, monday) {
-  const list = sessions.filter((s) => mondayOf(s.date) === monday && sessionHasData(s));
+  const list = sessions.filter((s) => mondayOf(s.date) === monday && (s.finishedAt || sessionHasData(s)));
   return {
     sessions: list,
     volume: list.reduce((a, s) => a + sessionVolume(s).volume, 0),

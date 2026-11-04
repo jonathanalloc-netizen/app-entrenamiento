@@ -26,7 +26,7 @@ export default function Home() {
   const next = routine.days[(lastIdx + 1) % routine.days.length];
   const trainedToday = sessions.some((s) => s.date === today && sessionHasData(s));
 
-  const lastDateOf = (dayId) => sessions.find((s) => s.dayId === dayId && sessionHasData(s))?.date;
+  const lastDateOf = (dayId) => sessions.find((s) => s.dayId === dayId && (s.finishedAt || sessionHasData(s)))?.date;
   const begin = (dayId) => navigate(`/sesion/${startSession(dayId, week)}`);
 
   return (

@@ -5,7 +5,7 @@ import { goBack, navigate } from '../router';
 import { lastPerformance, sessionHasData, sessionVolume } from '../stats';
 import { addSet, deleteSession, getRoutine, removeSet, updateSession, updateSet, useAppState } from '../store';
 import { startTimer } from '../timer';
-import { fmtDuration, fmtLong, fmtNum, fmtRest, fmtShort, fmtVolume } from '../utils';
+import { fmtDuration, fmtLong, fmtNum, fmtRest, fmtShort, fmtVolume, todayISO } from '../utils';
 import { Empty } from '../components/ui';
 
 export default function Session({ id }) {
@@ -73,6 +73,17 @@ export default function Session({ id }) {
           <span className="muted">{fmtVolume(volume)}</span>
         </div>
         <div className="bar"><i style={{ width: `${total ? (done / total) * 100 : 0}%` }} /></div>
+        <div className="weeks">
+          <label className="muted small" htmlFor="session-date">Fecha</label>
+          <input
+            id="session-date"
+            type="date"
+            className="date-inline"
+            value={session.date}
+            max={todayISO()}
+            onChange={(e) => e.target.value && updateSession(session.id, { date: e.target.value })}
+          />
+        </div>
         {dayHasWeeks(day) && (
           <div className="weeks">
             <span className="muted small">Semana del ciclo</span>
