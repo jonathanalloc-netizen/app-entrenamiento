@@ -9,7 +9,7 @@ const initial = () => ({
   version: 1,
   sessions: [],
   settings: { cycleStart: mondayOf(todayISO()) },
-  // Por fecha: { type: 'pesas' | 'descanso', eaten: { c1: true }, option: { c1: 1 }, supplements: { creatina: true } }
+  // Por fecha: { type: 'pesas' | 'descanso', eaten: { 'pesas:c1': true }, option: { c1: 1 }, supplements: { creatina: true } }
   nutrition: {},
 });
 
@@ -18,6 +18,13 @@ function load() {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const saved = JSON.parse(raw);
+      // Las comidas marcadas antes de separarlas por plan se asignan al plan elegido ese día.
+      for (const n of Object.values(saved.nutrition ?? {}))
+        for (const key of Object.keys(n.eaten ?? {}))
+          if (!key.includes(':')) {
+            n.eaten[`${n.type ?? 'pesas'}:${key}`] = n.eaten[key];
+            delete n.eaten[key];
+          }
       return { ...initial(), ...saved, settings: { ...initial().settings, ...saved.settings } };
     }
   } catch {
@@ -133,10 +140,16 @@ function updateDay(date, fn) {
 
 export const setDayType = (date, type) => updateDay(date, (n) => (n.type = type));
 
-export const toggleMeal = (date, mealId) =>
+// Las comidas marcadas van por plan: las de pesas y las de descanso son independientes.
+export const mealKey = (type, mealId) => `${type}:${mealId}`;
+
+export const isMealEaten = (s, date, type, mealId) => !!s.nutrition?.[date]?.eaten?.[mealKey(type, mealId)];
+
+export const toggleMeal = (date, type, mealId) =>
   updateDay(date, (n) => {
     n.eaten ??= {};
-    n.eaten[mealId] = !n.eaten[mealId];
+    const key = mealKey(type, mealId);
+    n.eaten[key] = !n.eaten[key];
   });
 
 export const setMealOption = (date, mealId, idx) =>

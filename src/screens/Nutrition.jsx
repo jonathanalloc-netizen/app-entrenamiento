@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Check, ChevronLeft, ChevronRight, Dumbbell, Footprints, Pill } from 'lucide-react';
 import { NUTRITION } from '../nutrition';
 import { REST_DAY_NOTE } from '../routine';
-import { dayType, setDayType, setMealOption, toggleMeal, toggleSupplement, useAppState } from '../store';
+import { dayType, isMealEaten, setDayType, setMealOption, toggleMeal, toggleSupplement, useAppState } from '../store';
 import { addDays, daysBetween, fmtLong, todayISO } from '../utils';
 import { Ring } from '../components/ui';
 
@@ -18,7 +18,7 @@ export default function Nutrition() {
   const type = dayType(state, date) ?? 'pesas';
   const plan = NUTRITION.plans[type];
   const day = state.nutrition?.[date] ?? {};
-  const eaten = plan.meals.filter((m) => day.eaten?.[m.id]).length;
+  const eaten = plan.meals.filter((m) => isMealEaten(state, date, type, m.id)).length;
   const offset = daysBetween(today, date);
   const relative = offset === 0 ? 'Hoy' : offset === 1 ? 'Mañana' : offset === -1 ? 'Ayer' : null;
 
@@ -82,13 +82,13 @@ export default function Nutrition() {
 
       {plan.meals.map((meal, idx) => {
         const opt = Math.min(day.option?.[meal.id] ?? 0, meal.options.length - 1);
-        const done = !!day.eaten?.[meal.id];
+        const done = isMealEaten(state, date, type, meal.id);
         return (
           <div key={meal.id} className={`card meal ${done ? 'done' : ''}`}>
             <div className="meal-head">
               <span className="meal-n">{idx + 1}</span>
               <h3>{meal.name}</h3>
-              <button className="check" onClick={() => toggleMeal(date, meal.id)} aria-label={`${meal.name} hecha`}>
+              <button className="check" onClick={() => toggleMeal(date, type, meal.id)} aria-label={`${meal.name} hecha`}>
                 <Check size={18} strokeWidth={3} />
               </button>
             </div>

@@ -3,7 +3,7 @@ import { NUTRITION } from '../nutrition';
 import { GROUPS, REST_DAY_NOTE } from '../routine';
 import { navigate } from '../router';
 import { sessionHasData, sortedSessions, weekTotals } from '../stats';
-import { dayType, getRoutine, startSession, useAppState } from '../store';
+import { dayType, getRoutine, isMealEaten, startSession, useAppState } from '../store';
 import { addDays, cycleWeek, fmtLong, fmtShort, fmtVolume, mondayOf, todayISO } from '../utils';
 import { GroupChip, Ring } from '../components/ui';
 
@@ -27,8 +27,9 @@ export default function Home() {
   const next = routine.days[(lastIdx + 1) % routine.days.length];
   const trainedToday = sessions.some((s) => s.date === today && sessionHasData(s));
 
-  const nutriPlan = NUTRITION.plans[dayType(state, today) ?? 'pesas'];
-  const mealsEaten = nutriPlan.meals.filter((m) => state.nutrition?.[today]?.eaten?.[m.id]).length;
+  const nutriType = dayType(state, today) ?? 'pesas';
+  const nutriPlan = NUTRITION.plans[nutriType];
+  const mealsEaten = nutriPlan.meals.filter((m) => isMealEaten(state, today, nutriType, m.id)).length;
 
   const lastDateOf =(dayId) => sessions.find((s) => s.dayId === dayId && (s.finishedAt || sessionHasData(s)))?.date;
   const begin = (dayId) => navigate(`/sesion/${startSession(dayId, week)}`);
