@@ -98,6 +98,8 @@ export default function Session({ id }) {
         )}
       </div>
 
+      {day.note && <p className="note">{day.note}</p>}
+
       {blocks.map((block, bi) => (
         <Block key={bi} block={block} session={session} sessions={state.sessions} />
       ))}

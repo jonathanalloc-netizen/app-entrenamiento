@@ -1,6 +1,6 @@
 import { ChevronRight, Dumbbell, Footprints, Play, Salad } from 'lucide-react';
-import { NUTRITION } from '../nutrition';
-import { GROUPS, REST_DAY_NOTE } from '../routine';
+import { NUTRITION } from '@profile/nutrition';
+import { CARDIO, GROUPS, REST_DAY_NOTE } from '../routine';
 import { navigate } from '../router';
 import { sessionHasData, sortedSessions, weekTotals } from '../stats';
 import { dayType, getRoutine, isMealEaten, startSession, useAppState } from '../store';
@@ -127,6 +127,16 @@ export default function Home() {
           );
         })}
       </div>
+
+      {CARDIO && (
+        <div className="card cardio">
+          <h3>{CARDIO.title}</h3>
+          {CARDIO.note && <p className="muted small">{CARDIO.note}</p>}
+          <ol>
+            {CARDIO.steps.map((s) => <li key={s}>{s}</li>)}
+          </ol>
+        </div>
+      )}
 
       <div className="card restday">
         <Footprints size={22} />

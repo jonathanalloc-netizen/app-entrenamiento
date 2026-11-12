@@ -24,9 +24,16 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      # Una app por perfil: jonathan en la raíz y cada perfil más en su subcarpeta.
+      - name: Compilar perfiles
         env:
-          BASE_PATH: /${{ github.event.repository.name }}/
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          PROFILE=jonathan BASE_PATH=/$REPO/ npx vite build --outDir dist
+          for p in $(ls src/profiles); do
+            [ "$p" = jonathan ] && continue
+            PROFILE=$p BASE_PATH=/$REPO/$p/ npx vite build --outDir dist/$p
+          done
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

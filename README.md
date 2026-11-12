@@ -17,4 +17,11 @@ npm install
 npm run dev
 ```
 
-La rutina está en [`src/routine.js`](src/routine.js). Cada push a `main` publica la app en GitHub Pages (`.github/workflows/deploy.yml`).
+## Perfiles
+
+Cada persona tiene su carpeta en `src/profiles/<perfil>/` con `routine.js`, `nutrition.js` y `profile.json`, y se publica como una app independiente:
+
+- `jonathan` → `/app-entrenamiento/`
+- `lucia` → `/app-entrenamiento/lucia/`
+
+Para probar otro perfil en local: `PROFILE=lucia npx vite`. Cada push a `main` publica todos los perfiles en GitHub Pages (`.github/workflows/deploy.yml`).

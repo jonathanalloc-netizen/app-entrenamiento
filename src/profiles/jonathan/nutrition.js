@@ -1,4 +1,4 @@
-// Plan de alimentación. Cada comida tiene una o varias opciones;
+// Plan de alimentación de Jonathan. Cada comida tiene una o varias opciones;
 // cada opción es una lista de alimentos { qty, food }.
 
 const i = (qty, food) => ({ qty, food });

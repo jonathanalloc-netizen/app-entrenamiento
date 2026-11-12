@@ -1,9 +1,10 @@
 import { useSyncExternalStore } from 'react';
+import PROFILE from '@profile/profile.json';
 import { DEFAULT_ROUTINE } from './routine';
 import { mondayOf, todayISO, uid } from './utils';
 
-// Todo se guarda en el propio móvil (localStorage).
-const KEY = 'entreno:v1';
+// Todo se guarda en el propio móvil (localStorage), con una clave por perfil.
+const KEY = PROFILE.storageKey;
 
 const initial = () => ({
   version: 1,

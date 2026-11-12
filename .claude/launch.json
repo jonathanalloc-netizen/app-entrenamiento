@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev", "--", "--port", "5173", "--strictPort"],
       "port": 5173
+    },
+    {
+      "name": "dev-lucia",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "set PROFILE=lucia&& npx vite --port 5174 --strictPort"],
+      "port": 5174
     }
   ]
 }

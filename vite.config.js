@@ -1,18 +1,36 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
-// En GitHub Pages la app vive en /<nombre-del-repo>/ (lo pasa el workflow en BASE_PATH).
+// Cada persona es un perfil de src/profiles/ y se publica como una app aparte:
+// el perfil principal en /<repo>/ y el resto en /<repo>/<perfil>/.
+// El workflow pasa PROFILE y BASE_PATH en cada compilación.
+const MAIN_PROFILE = 'jonathan';
+const profile = process.env.PROFILE || MAIN_PROFILE;
+const profilesDir = fileURLToPath(new URL('./src/profiles/', import.meta.url));
+const config = JSON.parse(readFileSync(`${profilesDir}${profile}/profile.json`, 'utf8'));
+const base = process.env.BASE_PATH || '/';
+
+// La app principal no debe abrir su propia página en los enlaces de los demás perfiles.
+const others = readdirSync(profilesDir).filter((p) => p !== MAIN_PROFILE);
+const denylist = profile === MAIN_PROFILE ? others.map((p) => new RegExp(`^${base}${p}(/|$)`)) : [];
+
 export default defineConfig({
-  base: process.env.BASE_PATH || '/',
+  base,
+  resolve: {
+    alias: { '@profile': `${profilesDir}${profile}` },
+  },
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'icon.svg', 'apple-touch-icon-180x180.png'],
       manifest: {
-        name: 'Entreno · Registro de pesos',
-        short_name: 'Entreno',
+        id: base,
+        name: config.appName,
+        short_name: config.shortName,
         description: 'Registra tus pesos en cada entrenamiento y sigue tu progresión semanal.',
         lang: 'es',
         theme_color: '#f5f6f1',
@@ -30,6 +48,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+        globIgnores: others.map((p) => `${p}/**`),
+        navigateFallbackDenylist: denylist,
       },
     }),
   ],

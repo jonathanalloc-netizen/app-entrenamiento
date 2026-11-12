@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Check, ChevronLeft, ChevronRight, Dumbbell, Footprints, Pill } from 'lucide-react';
-import { NUTRITION } from '../nutrition';
+import { NUTRITION } from '@profile/nutrition';
 import { REST_DAY_NOTE } from '../routine';
 import { dayType, isMealEaten, setDayType, setMealOption, toggleMeal, toggleSupplement, useAppState } from '../store';
 import { addDays, daysBetween, fmtLong, todayISO } from '../utils';
@@ -20,6 +20,14 @@ export default function Nutrition() {
   const day = state.nutrition?.[date] ?? {};
   const eaten = plan.meals.filter((m) => isMealEaten(state, date, type, m.id)).length;
   const offset = daysBetween(today, date);
+  const supps = NUTRITION.supplements;
+  const suppButtons = supps.map((s) => (
+    <button key={s.id} className={`supp ${day.supplements?.[s.id] ? 'on' : ''}`} onClick={() => toggleSupplement(date, s.id)}>
+      <Pill size={16} />
+      <span><strong>{s.name}</strong> · {s.amount}</span>
+      <i><Check size={14} strokeWidth={3} /></i>
+    </button>
+  ));
   const relative = offset === 0 ? 'Hoy' : offset === 1 ? 'Mañana' : offset === -1 ? 'Ayer' : null;
 
   return (
@@ -59,19 +67,17 @@ export default function Nutrition() {
         <div className="hero-info">
           <span className="pill orange">{plan.label}</span>
           <span className="muted small">comidas hechas</span>
-          {NUTRITION.supplements.map((s) => (
-            <button
-              key={s.id}
-              className={`supp ${day.supplements?.[s.id] ? 'on' : ''}`}
-              onClick={() => toggleSupplement(date, s.id)}
-            >
-              <Pill size={16} />
-              <span><strong>{s.name}</strong> · {s.amount}</span>
-              <i><Check size={14} strokeWidth={3} /></i>
-            </button>
-          ))}
+          {supps.length === 1 && suppButtons}
         </div>
       </section>
+
+      {supps.length > 1 && (
+        <div className="card supps">
+          <h3>Suplementación</h3>
+          {suppButtons}
+          {NUTRITION.supplementsNote && <p className="muted small">{NUTRITION.supplementsNote}</p>}
+        </div>
+      )}
 
       {type === 'descanso' && (
         <div className="card restday">
